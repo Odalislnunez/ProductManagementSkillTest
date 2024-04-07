@@ -24,7 +24,7 @@ namespace ProductManagement.Core.Models
 
         [Required]
         [DisplayName("Status")]
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
         public ICollection<CustomerProduct> CustomerProducts { get; set; }
     }

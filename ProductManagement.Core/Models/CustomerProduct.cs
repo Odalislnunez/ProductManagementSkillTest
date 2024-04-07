@@ -31,7 +31,7 @@ namespace ProductManagement.Core.Models
 
         [Required]
         [DisplayName("Status")]
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
         [DisplayName("Customer")]
         public Customer Customer { get; set; }

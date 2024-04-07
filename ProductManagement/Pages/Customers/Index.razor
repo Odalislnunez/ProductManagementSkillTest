@@ -8,7 +8,7 @@
 <h1>Customers</h1>
 
 <div class="w-100 d-flex justify-content-end">
-    <input class="btn btn-success btn-sm" type="button" value="New customer"/>
+    <a class="btn btn-success btn-sm" href="/customers/create">New customer</a>
 </div>
 
 @if (customers == null)
@@ -36,8 +36,26 @@ else
                     <td>@customer.Name</td>
                     <td>@customer.Phone</td>
                     <td>@customer.Email</td>
-                    <td>@customer.Status</td>
-                    <td>Edit/Delete</td>
+                    @{
+                        var statText = "";
+                        var deleteAction = "";
+
+                        if (customer.Status)
+                        {
+                            statText = "Active";
+                            deleteAction = "Delete";
+                        }
+                        else
+                        {
+                            statText = "Inactive";
+                            deleteAction = "Recover";
+                        }
+                    }
+                    <td>@statText</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="/customers/edit/@customer.Id">Edit</a>
+                        <a class="btn btn-danger btn-sm">@deleteAction</a>
+                    </td>
                 </tr>
             }
         </tbody>

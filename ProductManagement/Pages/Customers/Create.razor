@@ -1,0 +1,52 @@
+﻿@page "/customers/create"
+@using System.Linq.Expressions
+
+<PageTitle>Add a customer</PageTitle>
+
+@inject IGeneridCrudService<Customer> _customerService;
+
+<h1>Add a customer</h1>
+
+<div class="row">
+    <div class="col-sm-6">
+        <form @onsubmit="CreateCustomer">
+            <div class="form-group mb-2">
+                <label class="control-label">Customer Name</label>
+                <input class="form-control" type="text" required @bind="customer.Name" placeholder="Type a name" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label">Phone</label>
+                <input class="form-control" type="tel" required @bind="customer.Phone" placeholder="Type a phone number" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label">Email</label>
+                <input class="form-control" type="email" required @bind="customer.Email" placeholder="Type an e-mail" />
+            </div>
+            <div class="form-check form-check-inline mb-3">
+                <input class="form-check-input" type="checkbox" required @bind="customer.Status" />
+                <label class="form-check-label font-weight-bold">Status</label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-info btn-sm" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<br />
+<div>
+    <a class="btn btn-info btn-sm" href="/customers">Return to list</a>
+</div>
+
+@code {
+    private Customer customer = new Customer();
+
+    private async Task CreateCustomer()
+    {
+        var result = await _customerService.Create(customer);
+        if (result)
+        {
+            customer = new Customer();
+        }
+    }
+}

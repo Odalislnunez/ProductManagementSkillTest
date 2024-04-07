@@ -1,18 +1,12 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using ProductManagement.Data;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ProductManagement.Core.Persistences;
+using ProductManagement.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DbContextConnection") ?? throw new InvalidOperationException("Connection string 'DbContextConnection' not found.");
 
-builder.Services.AddDbContext<DbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<DbContext>();
+builder.Services.AddDbContext<ProductManagement.Core.Persistences.DbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("DbContextConnection"), migration => migration.MigrationsAssembly("ProductManagement.Core"));
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();

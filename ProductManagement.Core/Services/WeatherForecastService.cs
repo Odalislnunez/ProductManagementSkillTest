@@ -1,4 +1,6 @@
-namespace ProductManagement.Data
+using ProductManagement.Core.Models;
+
+namespace ProductManagement.Core.Services
 {
     public class WeatherForecastService
     {

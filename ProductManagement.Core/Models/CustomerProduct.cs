@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,5 +37,10 @@ namespace ProductManagement.Core.Models
 
         [DisplayName("Item")]
         public Product Product { get; set; }
+
+        public CustomerProduct Clone()
+        {
+            return (CustomerProduct)this.MemberwiseClone();
+        }
     }
 }

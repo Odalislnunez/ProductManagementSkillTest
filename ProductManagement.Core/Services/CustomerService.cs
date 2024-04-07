@@ -47,6 +47,9 @@ namespace ProductManagement.Core.Services
             {
                 if(dto != null)
                 {
+                    dto.CreatedBy = "Odalis Test"; // Delete hard code when adding authentication.
+                    dto.CreatedAt = DateTime.Now;
+
                     _dbContext.Customers.Add(dto);
                     await _dbContext.SaveChangesAsync();
 
@@ -71,6 +74,9 @@ namespace ProductManagement.Core.Services
 
                     if(customer != null && customer.Id == dto.Id)
                     {
+                        dto.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.
+                        dto.UpdatedAt = DateTime.Now;
+
                         _dbContext.Customers.Update(dto);
                         await _dbContext.SaveChangesAsync();
 
@@ -97,6 +103,8 @@ namespace ProductManagement.Core.Services
                 if(customer != null)
                 {
                     customer.Status = !customer.Status;
+                    customer.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.
+                    customer.UpdatedAt = DateTime.Now;
 
                     _dbContext.Update(customer);
                     await _dbContext.SaveChangesAsync();

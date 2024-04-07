@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProductManagement.Core.Models
 {
-    public class CustomerProduct : BaseModel
+    public class CustomerItem : BaseModel
     {
         [Key]
         [Required]
@@ -15,10 +15,10 @@ namespace ProductManagement.Core.Models
         [DisplayName("Customer")]
         public int CustomerId { get; set; }
 
-        [ForeignKey("Product")]
+        [ForeignKey("Item")]
         [Required]
         [DisplayName("Item number")]
-        public int ProductId { get; set; }
+        public int ItemId { get; set; }
 
         [Required]
         [DisplayName("Quantity")]
@@ -36,11 +36,11 @@ namespace ProductManagement.Core.Models
         public Customer Customer { get; set; }
 
         [DisplayName("Item")]
-        public Product Product { get; set; }
+        public Item Item { get; set; }
 
-        public CustomerProduct Clone()
+        public CustomerItem Clone()
         {
-            return (CustomerProduct)this.MemberwiseClone();
+            return (CustomerItem)this.MemberwiseClone();
         }
     }
 }

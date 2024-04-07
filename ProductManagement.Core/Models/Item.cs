@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProductManagement.Core.Models
 {
-    public class Product : BaseModel
+    public class Item : BaseModel
     {
         [Key]
         [Required]
@@ -26,11 +26,11 @@ namespace ProductManagement.Core.Models
         [DisplayName("Status")]
         public bool Status { get; set; } = true;
 
-        public ICollection<CustomerProduct> CustomerProducts { get; set; }
+        public ICollection<CustomerItem> CustomerItems { get; set; }
 
-        public Product Clone()
+        public Item Clone()
         {
-            return (Product)this.MemberwiseClone();
+            return (Item)this.MemberwiseClone();
         }
     }
 }

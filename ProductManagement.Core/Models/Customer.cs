@@ -27,7 +27,7 @@ namespace ProductManagement.Core.Models
         [DisplayName("Status")]
         public bool Status { get; set; } = true;
 
-        public ICollection<CustomerProduct> CustomerProducts { get; set; }
+        public ICollection<CustomerItem> CustomerItems { get; set; }
 
         public Customer Clone()
         {

@@ -25,8 +25,4 @@
     <ProjectReference Include="..\ProductManagement.Core\ProductManagement.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\NewFolder\" />
-  </ItemGroup>
-
 </Project>

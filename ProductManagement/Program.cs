@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using ProductManagement.Core.Models;
+using ProductManagement.Core.Persistences;
 using ProductManagement.Core.Services;
+using ProductManagement.Core.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ProductManagement.Core.Persistences.DbContext>(options =>
+builder.Services.AddDbContext<PMDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DbContextConnection"), migration => migration.MigrationsAssembly("ProductManagement.Core"));
 });
@@ -12,6 +15,7 @@ builder.Services.AddDbContext<ProductManagement.Core.Persistences.DbContext>(opt
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddTransient<IGeneridCrudService<Customer>, CustomerService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,54 @@
+﻿@page "/customers"
+@using System.Linq.Expressions
+
+<PageTitle>Customers</PageTitle>
+
+@inject IGeneridCrudService<Customer> _customerService;
+
+<h1>Customers</h1>
+
+<div class="w-100 d-flex justify-content-end">
+    <input class="btn btn-success btn-sm" type="button" value="New customer"/>
+</div>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Customer name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.Id</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.Phone</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.Status</td>
+                    <td>Edit/Delete</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Customer> customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await _customerService.GetAll();
+    }
+}

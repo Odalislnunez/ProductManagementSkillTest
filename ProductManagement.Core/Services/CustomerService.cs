@@ -27,7 +27,7 @@ namespace ProductManagement.Core.Services
             }
         }
 
-        public async Task<Customer> Get(int id)
+        public async Task<Customer> GetById(int id)
         {
             try
             {

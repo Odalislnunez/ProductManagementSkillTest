@@ -16,6 +16,7 @@ namespace ProductManagement.Core.Models
 
         [Required]
         [DisplayName("Phone")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "The phone number must be 10 digits.")]
         public string Phone { get; set; }
 
         [Required]
@@ -24,8 +25,13 @@ namespace ProductManagement.Core.Models
 
         [Required]
         [DisplayName("Status")]
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
         public ICollection<CustomerProduct> CustomerProducts { get; set; }
+
+        public Customer Clone()
+        {
+            return (Customer)this.MemberwiseClone();
+        }
     }
 }

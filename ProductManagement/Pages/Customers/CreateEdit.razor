@@ -1,0 +1,80 @@
+﻿@page "/customers/create"
+@page "/customers/edit/{id:int}"
+@using System.Linq.Expressions
+
+<PageTitle>@Title</PageTitle>
+
+@inject IGeneridCrudService<Customer> _customerService;
+
+<h1>@Title</h1>
+
+<div class="row">
+    <div class="col-sm-6">
+        <EditForm Model="@customer" OnValidSubmit="CreateEditCustomer">
+            <DataAnnotationsValidator />
+
+            <div class="form-group mb-2">
+                <label class="control-label" for="Name">Customer Name</label>
+                <InputText class="form-control" @bind-Value="customer.Name" Placeholder="Type a name" />
+                <ValidationMessage For="@(()=>customer.Name)" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Phone">Phone</label>
+                <input type="tel" class="form-control" @bind="customer.Phone" Placeholder="Type a phone number" />
+                <ValidationMessage For="@(()=>customer.Phone)" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Email">Email</label>
+                <input type="email" class="form-control" @bind="customer.Email" placeholder="Type an e-mail" />
+                <ValidationMessage For="@(()=>customer.Email)" />
+            </div>
+            <div class="my-2">
+                @message
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-info btn-sm" />
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<br />
+<div>
+    <a class="btn btn-info btn-sm" href="customers">Return to list</a>
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private string message = string.Empty;
+    private Customer customer = new Customer();
+    private Customer originalCustomer = new Customer();
+    private string Title = "Add a customer";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id > 0)
+        {
+            Title = "Edit a customer";
+            originalCustomer = await _customerService.GetById(id);
+            customer = originalCustomer.Clone();
+        }
+        base.OnInitialized();
+    }
+
+    private async Task CreateEditCustomer()
+    {
+        message = "Loading...";
+
+        bool result = customer.Id > 0
+            ? await _customerService.Update(customer.Id, customer)
+            : await _customerService.Create(customer);
+
+        message = result ? "Successfully saved" : "Could not be saved";
+
+        if (result && string.IsNullOrEmpty(customer.UpdatedBy))
+        {
+            customer = new Customer();
+        }
+    }
+}

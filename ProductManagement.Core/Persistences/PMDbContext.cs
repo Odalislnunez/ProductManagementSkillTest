@@ -5,9 +5,9 @@ using ProductManagement.Core.Models;
 
 namespace ProductManagement.Core.Persistences
 {
-    public class DbContext : IdentityDbContext<IdentityUser>
+    public class PMDbContext : IdentityDbContext<IdentityUser>
     {
-        public DbContext(DbContextOptions<DbContext> options) : base(options) { }
+        public PMDbContext(DbContextOptions<PMDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -6,6 +6,10 @@ namespace ProductManagement.Core.Models
 {
     public class CustomerProduct : BaseModel
     {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+
         [ForeignKey("Customer")]
         [Required]
         [DisplayName("Customer")]
@@ -26,12 +30,17 @@ namespace ProductManagement.Core.Models
 
         [Required]
         [DisplayName("Status")]
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
         [DisplayName("Customer")]
         public Customer Customer { get; set; }
 
         [DisplayName("Item")]
         public Product Product { get; set; }
+
+        public CustomerProduct Clone()
+        {
+            return (CustomerProduct)this.MemberwiseClone();
+        }
     }
 }

@@ -1,0 +1,73 @@
+﻿@page "/customers"
+@using System.Linq.Expressions
+
+<PageTitle>Customers</PageTitle>
+
+@inject IGeneridCrudService<Customer> _customerService;
+
+<h1>Customers</h1>
+
+<div class="w-100 d-flex justify-content-end">
+    <a class="btn btn-success btn-sm" href="/customers/create">New customer</a>
+</div>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Customer name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.Id</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.Phone</td>
+                    <td>@customer.Email</td>
+                    @{
+                        var statText = customer.Status ? "Active" : "Inactive";
+                        var deleteAction = customer.Status ? "Delete" : "Recover";
+                        var deleteActionClass = customer.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+                    }
+                    <td>@statText</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="/customers/edit/@customer.Id">Edit</a>
+                        <a class="@deleteActionClass" @onclick="() => DeleteCustomer(customer.Id)">@deleteAction</a>
+                        <a class="btn btn-warning btn-sm" href="/customerItems/@customer.Id">View items</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Customer> customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await _customerService.GetAll();
+    }
+
+    private async Task DeleteCustomer(int id)
+    {
+        if(id > 0)
+        {
+            var result = await _customerService.Delete(id);
+
+            customers = await _customerService.GetAll();
+        }
+    }
+}

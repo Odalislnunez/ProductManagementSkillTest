@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,6 +7,10 @@ namespace ProductManagement.Core.Models
 {
     public class CustomerProduct : BaseModel
     {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+
         [ForeignKey("Customer")]
         [Required]
         [DisplayName("Customer")]

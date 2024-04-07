@@ -1,4 +1,4 @@
-namespace ProductManagement.Data
+namespace ProductManagement.Core.Models
 {
     public class WeatherForecast
     {

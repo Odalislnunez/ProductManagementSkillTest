@@ -35,4 +35,3 @@ namespace ProductManagement.Core.Models
         public Product Product { get; set; }
     }
 }
-}

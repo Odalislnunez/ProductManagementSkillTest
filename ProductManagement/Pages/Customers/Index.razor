@@ -37,24 +37,15 @@ else
                     <td>@customer.Phone</td>
                     <td>@customer.Email</td>
                     @{
-                        var statText = "";
-                        var deleteAction = "";
-
-                        if (customer.Status)
-                        {
-                            statText = "Active";
-                            deleteAction = "Delete";
-                        }
-                        else
-                        {
-                            statText = "Inactive";
-                            deleteAction = "Recover";
-                        }
+                        var statText = customer.Status ? "Active" : "Inactive";
+                        var deleteAction = customer.Status ? "Delete" : "Recover";
+                        var deleteActionClass = customer.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
                     }
                     <td>@statText</td>
                     <td>
                         <a class="btn btn-info btn-sm" href="/customers/edit/@customer.Id">Edit</a>
-                        <a class="btn btn-danger btn-sm">@deleteAction</a>
+                        <a class="@deleteActionClass" @onclick="() => DeleteCustomer(customer.Id)">@deleteAction</a>
+                        <a class="btn btn-warning btn-sm" href="/customerItems/@customer.Id">View items</a>
                     </td>
                 </tr>
             }
@@ -68,5 +59,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         customers = await _customerService.GetAll();
+    }
+
+    private async Task DeleteCustomer(int id)
+    {
+        if(id > 0)
+        {
+            var result = await _customerService.Delete(id);
+
+            customers = await _customerService.GetAll();
+        }
     }
 }

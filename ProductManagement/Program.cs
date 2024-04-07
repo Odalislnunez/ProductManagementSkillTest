@@ -14,8 +14,8 @@ builder.Services.AddDbContext<PMDbContext>(options =>
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<IGeneridCrudService<Customer>, CustomerService>();
+builder.Services.AddTransient<IGeneridCrudService<Item>, ItemService>();
 
 var app = builder.Build();
 

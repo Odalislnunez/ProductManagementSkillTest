@@ -16,6 +16,7 @@ namespace ProductManagement.Core.Models
 
         [Required]
         [DisplayName("Phone")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "The phone number must be 10 digits.")]
         public string Phone { get; set; }
 
         [Required]

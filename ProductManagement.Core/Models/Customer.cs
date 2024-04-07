@@ -28,5 +28,10 @@ namespace ProductManagement.Core.Models
         public bool Status { get; set; } = true;
 
         public ICollection<CustomerProduct> CustomerProducts { get; set; }
+
+        public Customer Clone()
+        {
+            return (Customer)this.MemberwiseClone();
+        }
     }
 }

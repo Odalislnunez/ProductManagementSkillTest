@@ -40,7 +40,7 @@
 
 <br />
 <div>
-    <a class="btn btn-info btn-sm" href="/customers">Return to list</a>
+    <a class="btn btn-info btn-sm" href="customers">Return to list</a>
 </div>
 
 @code {
@@ -48,6 +48,7 @@
     public int id { get; set; }
     private string message = string.Empty;
     private Customer customer = new Customer();
+    private Customer originalCustomer = new Customer();
     private string Title = "Add a customer";
 
     protected override async Task OnInitializedAsync()
@@ -55,7 +56,8 @@
         if (id > 0)
         {
             Title = "Edit a customer";
-            customer = await _customerService.GetById(id);
+            originalCustomer = await _customerService.GetById(id);
+            customer = originalCustomer.Clone();
         }
         base.OnInitialized();
     }

@@ -48,7 +48,6 @@
     public int id { get; set; }
     private string message = string.Empty;
     private Customer customer = new Customer();
-    private Customer originalCustomer = new Customer();
     private string Title = "Add a customer";
 
     protected override async Task OnInitializedAsync()
@@ -56,8 +55,7 @@
         if (id > 0)
         {
             Title = "Edit a customer";
-            originalCustomer = await _customerService.GetById(id);
-            customer = originalCustomer.Clone();
+            customer = await _customerService.GetById(id);
         }
         base.OnInitialized();
     }

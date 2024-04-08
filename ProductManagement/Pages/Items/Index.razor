@@ -1,0 +1,81 @@
+﻿@page "/items"
+@using System.Linq.Expressions
+
+<PageTitle>Items</PageTitle>
+
+@inject IGeneridCrudService<Item> _itemService;
+
+<h1>Items</h1>
+
+<div class="w-100 d-flex justify-content-end">
+    <a class="btn btn-success btn-sm" href="/items/create">New item</a>
+</div>
+
+@if (items == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item number</th>
+                <th>Description</th>
+                <th>Default Price</th>
+                <th>Item category</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Category</td>
+                    @{
+                        var statText = item.Status ? "Active" : "Inactive";
+                        var deleteAction = item.Status ? "Delete" : "Recover";
+                        var deleteActionClass = item.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+                    }
+                    <td>@statText</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" href="/items/edit/@item.Id">Edit</a>
+                        <a class="@deleteActionClass" @onclick="() => DeleteItem(item.Id)">@deleteAction</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="my-2">
+        @message
+    </div>
+}
+
+@code {
+    private IEnumerable<Item> items;
+    private string message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await _itemService.GetAll();
+    }
+
+    private async Task DeleteItem(int id)
+    {
+        if(id > 0)
+        {
+            var result = await _itemService.Delete(id);
+
+            if (!result)
+                message = "Error deleting/recovering item.";
+            else
+                message = string.Empty;
+
+            items = await _itemService.GetAll();
+        }
+    }
+}

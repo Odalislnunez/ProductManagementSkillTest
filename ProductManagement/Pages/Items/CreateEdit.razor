@@ -1,0 +1,78 @@
+﻿@page "/items/create"
+@page "/items/edit/{id:int}"
+@using System.Linq.Expressions
+
+<PageTitle>@Title</PageTitle>
+
+@inject IGeneridCrudService<Item> _itemService;
+
+<h1>@Title</h1>
+
+<div class="row">
+    <div class="col-sm-6">
+        <EditForm Model="@item" OnValidSubmit="CreateEditItem">
+            <DataAnnotationsValidator />
+
+            <div class="form-group mb-2">
+                <label class="control-label" for="Description">Description</label>
+                <InputText class="form-control" @bind-Value="item.Description" Placeholder="Type a description" />
+                <ValidationMessage For="@(()=>item.Description)" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Price">Default price</label>
+                <input type="number" class="form-control" @bind-value="item.Price" placeholder="Type a default price" />
+                <ValidationMessage For="@(()=>item.Price)" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Category">Item category</label>
+                <input type="text" class="form-control" @bind-value="item.Category" Placeholder="Type a category" />
+                <ValidationMessage For="@(()=>item.Category)" />
+            </div>
+            <div class="my-2">
+                @message
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-info btn-sm" />
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<br />
+<div>
+    <a class="btn btn-info btn-sm" href="items">Return to list</a>
+</div>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private string message = string.Empty;
+    private Item item = new Item();
+    private string Title = "Add an item";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id > 0)
+        {
+            Title = "Edit an item";
+            item = await _itemService.GetById(id);
+        }
+        base.OnInitialized();
+    }
+
+    private async Task CreateEditItem()
+    {
+        message = "Loading...";
+
+        bool result = item.Id > 0
+            ? await _itemService.Update(item.Id, item)
+            : await _itemService.Create(item);
+
+        message = result ? "Successfully saved" : "Could not be saved";
+
+        if (result && string.IsNullOrEmpty(item.UpdatedBy))
+        {
+            item = new Item();
+        }
+    }
+}

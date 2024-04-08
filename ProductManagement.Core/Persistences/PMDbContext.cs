@@ -16,8 +16,8 @@ namespace ProductManagement.Core.Persistences
 
         public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Item> Items { get; set; }
 
-        public DbSet<CustomerProduct> CustomersProducts { get; set; }
+        public DbSet<CustomerItem> CustomersItems { get; set; }
     }
 }

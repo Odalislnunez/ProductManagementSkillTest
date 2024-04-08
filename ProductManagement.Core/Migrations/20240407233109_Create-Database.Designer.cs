@@ -11,7 +11,7 @@ using ProductManagement.Core.Persistences;
 namespace ProductManagement.Core.Migrations
 {
     [DbContext(typeof(PMDbContext))]
-    [Migration("20240407160414_Create-Database")]
+    [Migration("20240407233109_Create-Database")]
     partial class CreateDatabase
     {
         /// <inheritdoc />
@@ -251,7 +251,7 @@ namespace ProductManagement.Core.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("ProductManagement.Core.Models.CustomerProduct", b =>
+            modelBuilder.Entity("ProductManagement.Core.Models.CustomerItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,11 +267,11 @@ namespace ProductManagement.Core.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ItemId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("Price")
                         .HasColumnType("REAL");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<double>("Quantity")
                         .HasColumnType("REAL");
@@ -289,12 +289,12 @@ namespace ProductManagement.Core.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ItemId");
 
-                    b.ToTable("CustomersProducts");
+                    b.ToTable("CustomersItems");
                 });
 
-            modelBuilder.Entity("ProductManagement.Core.Models.Product", b =>
+            modelBuilder.Entity("ProductManagement.Core.Models.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -328,7 +328,7 @@ namespace ProductManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,33 +382,33 @@ namespace ProductManagement.Core.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProductManagement.Core.Models.CustomerProduct", b =>
+            modelBuilder.Entity("ProductManagement.Core.Models.CustomerItem", b =>
                 {
                     b.HasOne("ProductManagement.Core.Models.Customer", "Customer")
-                        .WithMany("CustomerProducts")
+                        .WithMany("CustomerItems")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProductManagement.Core.Models.Product", "Product")
-                        .WithMany("CustomerProducts")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("ProductManagement.Core.Models.Item", "Item")
+                        .WithMany("CustomerItems")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Product");
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("ProductManagement.Core.Models.Customer", b =>
                 {
-                    b.Navigation("CustomerProducts");
+                    b.Navigation("CustomerItems");
                 });
 
-            modelBuilder.Entity("ProductManagement.Core.Models.Product", b =>
+            modelBuilder.Entity("ProductManagement.Core.Models.Item", b =>
                 {
-                    b.Navigation("CustomerProducts");
+                    b.Navigation("CustomerItems");
                 });
 #pragma warning restore 612, 618
         }

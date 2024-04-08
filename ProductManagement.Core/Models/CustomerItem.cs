@@ -37,10 +37,5 @@ namespace ProductManagement.Core.Models
 
         [DisplayName("Item")]
         public Item Item { get; set; }
-
-        public CustomerItem Clone()
-        {
-            return (CustomerItem)this.MemberwiseClone();
-        }
     }
 }

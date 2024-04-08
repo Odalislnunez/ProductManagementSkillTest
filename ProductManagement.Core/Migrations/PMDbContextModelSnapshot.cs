@@ -245,7 +245,7 @@ namespace ProductManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ProductManagement.Core.Models.CustomerItem", b =>
@@ -288,7 +288,7 @@ namespace ProductManagement.Core.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("CustomersItems");
+                    b.ToTable("CustomersItems", (string)null);
                 });
 
             modelBuilder.Entity("ProductManagement.Core.Models.Item", b =>
@@ -325,7 +325,7 @@ namespace ProductManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

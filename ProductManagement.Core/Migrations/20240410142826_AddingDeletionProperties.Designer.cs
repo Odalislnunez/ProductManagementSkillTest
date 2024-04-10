@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductManagement.Core.Persistences;
 
@@ -10,9 +11,11 @@ using ProductManagement.Core.Persistences;
 namespace ProductManagement.Core.Migrations
 {
     [DbContext(typeof(PMDbContext))]
-    partial class PMDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240410142826_AddingDeletionProperties")]
+    partial class AddingDeletionProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");

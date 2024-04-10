@@ -15,5 +15,11 @@ namespace ProductManagement.Core.Models
 
         [DisplayName("Update date")]
         public DateTime? UpdatedAt { get; set; }
+
+        [DisplayName("Deleted by")]
+        public string? DeletedBy { get; set; }
+
+        [DisplayName("Deletion date")]
+        public DateTime? DeletedAt { get; set; }
     }
 }

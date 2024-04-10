@@ -5,22 +5,22 @@ using ProductManagement.Core.Services.Interfaces;
 
 namespace ProductManagement.Core.Services
 {
-    public class ItemService : IGeneridCrudExtService<Item>
+    public class CustomerItemService : IGeneridCrudExtService<CustomerItem>
     {
         private readonly PMDbContext _dbContext;
 
-        public ItemService(PMDbContext dbContext)
+        public CustomerItemService(PMDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<Item>> GetAll()
+        public async Task<IEnumerable<CustomerItem>> GetAll()
         {
             try
             {
-                var items = await _dbContext.Items.ToListAsync();
+                var customerItems = await _dbContext.CustomersItems.ToListAsync();
 
-                return items;
+                return customerItems;
             }
             catch (Exception)
             {
@@ -28,16 +28,16 @@ namespace ProductManagement.Core.Services
             }
         }
 
-        public async Task<IEnumerable<Item>> GetAllById(int id)
+        public async Task<IEnumerable<CustomerItem>> GetAllById(int id)
         {
             try
             {
-                var items = await _dbContext.Items
-                    .Include(x => x.CustomerItems)
-                    .Where(y => !y.CustomerItems.Any(a => a.CustomerId == id) && y.Status)
+                var customerItems = await _dbContext.CustomersItems
+                    .Include(x => x.Item)
+                    .Where(x => x.CustomerId == id)
                     .ToListAsync();
 
-                return items;
+                return customerItems;
             }
             catch (Exception)
             {
@@ -45,13 +45,13 @@ namespace ProductManagement.Core.Services
             }
         }
 
-        public async Task<Item> GetById(int id)
+        public async Task<CustomerItem> GetById(int id)
         {
             try
             {
-                var item = await _dbContext.Items.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var customerItem = await _dbContext.CustomersItems.Where(x => x.Id == id).FirstOrDefaultAsync();
 
-                return item ?? new Item();
+                return customerItem ?? new CustomerItem();
             }
             catch (Exception)
             {
@@ -59,7 +59,7 @@ namespace ProductManagement.Core.Services
             }
         }
 
-        public async Task<bool> Create(Item dto)
+        public async Task<bool> Create(CustomerItem dto)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace ProductManagement.Core.Services
                     dto.CreatedBy = "Odalis Test"; // Delete hard code when adding authentication.
                     dto.CreatedAt = DateTime.Now;
 
-                    _dbContext.Items.Add(dto);
+                    _dbContext.CustomersItems.Add(dto);
                     await _dbContext.SaveChangesAsync();
 
                     return true;
@@ -82,20 +82,20 @@ namespace ProductManagement.Core.Services
             }
         }
 
-        public async Task<bool> Update(int id, Item dto)
+        public async Task<bool> Update(int id, CustomerItem dto)
         {
             try
             {
                 if (id > 0 && dto != null)
                 {
-                    var customer = await _dbContext.Items.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    var customerItem = await _dbContext.CustomersItems.Where(x => x.Id == id).FirstOrDefaultAsync();
 
-                    if(customer != null && customer.Id == dto.Id)
+                    if(customerItem != null && customerItem.Id == dto.Id)
                     {
                         dto.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.
                         dto.UpdatedAt = DateTime.Now;
 
-                        _dbContext.Items.Update(dto);
+                        _dbContext.CustomersItems.Update(dto);
                         await _dbContext.SaveChangesAsync();
 
                         return true;
@@ -116,15 +116,15 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customer = await _dbContext.Items.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var customerItem = await _dbContext.CustomersItems.Where(x => x.Id == id).FirstOrDefaultAsync();
 
-                if(customer != null)
+                if(customerItem != null)
                 {
-                    customer.Status = !customer.Status;
-                    customer.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.
-                    customer.UpdatedAt = DateTime.Now;
+                    customerItem.Status = !customerItem.Status;
+                    customerItem.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.
+                    customerItem.UpdatedAt = DateTime.Now;
 
-                    _dbContext.Update(customer);
+                    _dbContext.Update(customerItem);
                     await _dbContext.SaveChangesAsync();
 
                     return true;

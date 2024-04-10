@@ -1,0 +1,126 @@
+﻿@page "/customerItems/create/{customerId:int}"
+@page "/customerItems/edit/{id:int}"
+@using System.Linq.Expressions
+@using Items;
+
+<PageTitle>@Title</PageTitle>
+
+@inject IGeneridCrudService<Customer> _customerService;
+@inject IGeneridCrudExtService<Item> _itemService;
+@inject IGeneridCrudExtService<CustomerItem> _customerItemService;
+
+<h1>@Title</h1>
+
+<div class="row">
+    <div class="col-sm-6">
+        <EditForm Model="@customerItem" OnValidSubmit="CreateEditCustomerItem">
+            <DataAnnotationsValidator />
+
+            <div class="form-group mb-2">
+                <label class="control-label">Customer</label>
+                <InputText class="form-control" @bind-Value="customer.Name" readonly />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Item">Item</label>
+                <div class="input-group">
+                    <InputText class="form-control" @bind-Value="item.Description" disabled />
+                    <button type="button" class="btn btn-info btn-sm" @onclick="ShowItemConsult" disabled="@(id > 0 ? true : false)">Search item</button>
+                    <ValidationMessage For="@(()=>customerItem.ItemId)" />
+                </div>
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Quantity">Quantity</label>
+                <input type="number" class="form-control" @bind="customerItem.Quantity" Placeholder="Type a quantity" />
+                <ValidationMessage For="@(()=>customerItem.Quantity)" />
+            </div>
+            <div class="form-group mb-2">
+                <label class="control-label" for="Price">Price</label>
+                <input type="number" step="0.01" class="form-control" @bind="customerItem.Price" placeholder="Type a price" />
+                <ValidationMessage For="@(()=>customerItem.Price)" />
+            </div>
+            <div class="my-2">
+                @message
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-info btn-sm" />
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<br />
+<div>
+    <a class="btn btn-info btn-sm" href="customerItems/@customer.Id">Return to list</a>
+</div>
+
+<Modal @ref="modal" Size="ModalSize.ExtraLarge" />
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public int customerId { get; set; }
+    private string message = string.Empty;
+    private Customer customer = new Customer();
+    private Item item = new Item();
+    private CustomerItem customerItem = new CustomerItem();
+    private string Title = "Add a customer item";
+    private Modal modal = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (id > 0)
+        {
+            Title = "Edit a customer item";
+            customerItem = await _customerItemService.GetById(id);
+            customer = await _customerService.GetById(customerItem.CustomerId);
+            item = await _itemService.GetById(customerItem.ItemId);
+        }
+        else
+            customer = await _customerService.GetById(customerId);
+
+        base.OnInitialized();
+    }
+
+    private async Task ShowItemConsult()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("CustomerId", customer.Id);
+        parameters.Add("OnclickCallback", EventCallback.Factory.Create<int>(this, GetItemId));
+        await modal.ShowAsync<SearchList>(title: "Select an item", parameters: parameters);
+    }
+
+    private async void GetItemId(int itemId)
+    {
+        // Search item selected.
+        item = await _itemService.GetById(itemId);
+
+        // Close modal after select an item
+        await modal.HideAsync();
+    }
+
+    private async Task CreateEditCustomerItem()
+    {
+        if (customer.Id > 0 && item.Id > 0)
+        {
+            message = "Loading...";
+
+            customerItem.CustomerId = customer.Id;
+            customerItem.ItemId = item.Id;
+
+            bool result = customerItem.Id > 0
+                ? await _customerItemService.Update(customerItem.Id, customerItem)
+                : await _customerItemService.Create(customerItem);
+
+            message = result ? "Successfully saved" : "Could not be saved";
+
+            if (result && string.IsNullOrEmpty(customerItem.UpdatedBy))
+            {
+                customerItem = new CustomerItem();
+                item = new Item();
+            }
+        }
+        else
+            message = "You have to select an item and customer";
+    }
+}

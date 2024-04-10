@@ -38,13 +38,14 @@ else
                     <td>@item.Category</td>
                     @{
                         var statText = item.Status ? "Active" : "Inactive";
-                        var deleteAction = item.Status ? "Delete" : "Recover";
+                        var deleteAction = item.Status ? "Deactivate" : "Activate";
                         var deleteActionClass = item.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
                     }
                     <td>@statText</td>
                     <td>
                         <a class="btn btn-info btn-sm" href="/items/edit/@item.Id">Edit</a>
-                        <a class="@deleteActionClass" @onclick="() => DeleteItem(item.Id)">@deleteAction</a>
+                        <a class="@deleteActionClass" @onclick="() => ChangeStatus(item.Id)">@deleteAction</a>
+                        <a class="btn btn-danger btn-sm" @onclick="() => DeleteItem(item.Id)">Delete</a>
                     </td>
                 </tr>
             }
@@ -64,6 +65,23 @@ else
         items = await _itemService.GetAll();
     }
 
+    private async Task ChangeStatus(int id)
+    {
+        if (id > 0)
+        {
+            var result = await _itemService.ChangeStatus(id);
+
+            if (!result)
+                message = "Error deactivating/activating item.";
+            else
+                message = string.Empty;
+
+            items = await _itemService.GetAll();
+        }
+        else
+            message = "Any item selected";
+    }
+
     private async Task DeleteItem(int id)
     {
         if(id > 0)
@@ -71,11 +89,13 @@ else
             var result = await _itemService.Delete(id);
 
             if (!result)
-                message = "Error deleting/recovering item.";
+                message = "Error deleting item.";
             else
-                message = string.Empty;
+                message = "Item deleted";
 
             items = await _itemService.GetAll();
         }
+        else
+            message = "Any item selected";
     }
 }

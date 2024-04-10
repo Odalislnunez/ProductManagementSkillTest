@@ -42,18 +42,22 @@ else
                     <td>@customerItem.Price.ToString("n2")</td>
                     @{
                         var statText = customerItem.Status ? "Active" : "Inactive";
-                        var deleteAction = customerItem.Status ? "Delete" : "Recover";
+                        var deleteAction = customerItem.Status ? "Deactivate" : "Activate";
                         var deleteActionClass = customerItem.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
                     }
                     <td>@statText</td>
                     <td>
                         <a class="btn btn-info btn-sm" href="/customerItems/edit/@customerItem.Id">Edit</a>
-                        <a class="@deleteActionClass" @onclick="() => DeleteCustomerItem(customerItem.Id)">@deleteAction</a>
+                        <a class="@deleteActionClass" @onclick="() => ChangeStatus(customerItem.Id)">@deleteAction</a>
+                        <a class="btn btn-danger btn-sm" @onclick="() => DeleteCustomerItem(customerItem.Id)">Delete</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <div class="my-2">
+        @message
+    </div>
     <br />
     <div>
         <a class="btn btn-info btn-sm" href="customers">Return to customer list</a>
@@ -65,11 +69,29 @@ else
     public int customerId { get; set; }
     private IEnumerable<CustomerItem> customerItems;
     private Customer customer;
+    private string message = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         customer = await _customerService.GetById(customerId);
         customerItems = await _customerItemService.GetAllById(customerId);
+    }
+
+    private async Task ChangeStatus(int id)
+    {
+        if (id > 0)
+        {
+            var result = await _customerItemService.ChangeStatus(id);
+
+            if (!result)
+                message = "Error deactivating/activating.";
+            else
+                message = string.Empty;
+
+            customerItems = await _customerItemService.GetAllById(customerId);
+        }
+        else
+            message = "Any customer item selected";
     }
 
     private async Task DeleteCustomerItem(int id)
@@ -78,7 +100,14 @@ else
         {
             var result = await _customerItemService.Delete(id);
 
+            if (!result)
+                message = "Error deleting customer item.";
+            else
+                message = "Customer item deleted";
+
             customerItems = await _customerItemService.GetAllById(customerId);
         }
+        else
+            message = "Any customer item selected";
     }
 }

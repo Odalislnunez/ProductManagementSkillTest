@@ -3,7 +3,7 @@
 
 <PageTitle>Items</PageTitle>
 
-@inject IGeneridCrudService<Item> _itemService;
+@inject IGeneridCrudExtService<Item> _itemService;
 
 <h1>Items</h1>
 
@@ -34,7 +34,7 @@ else
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.Description</td>
-                    <td>@item.Price</td>
+                    <td>@item.Price.ToString("n2")</td>
                     <td>@item.Category</td>
                     @{
                         var statText = item.Status ? "Active" : "Inactive";

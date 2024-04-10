@@ -15,7 +15,9 @@ builder.Services.AddDbContext<PMDbContext>(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<IGeneridCrudService<Customer>, CustomerService>();
-builder.Services.AddTransient<IGeneridCrudService<Item>, ItemService>();
+builder.Services.AddTransient<IGeneridCrudExtService<Item>, ItemService>();
+builder.Services.AddTransient<IGeneridCrudExtService<CustomerItem>, CustomerItemService>();
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 

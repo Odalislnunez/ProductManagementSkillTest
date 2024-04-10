@@ -43,9 +43,9 @@ else
                     }
                     <td>@statText</td>
                     <td>
-                        <a class="btn btn-info btn-sm" href="/customers/edit/@customer.Id">Edit</a>
+                        <a class="btn btn-info btn-sm" href="customers/edit/@customer.Id">Edit</a>
                         <a class="@deleteActionClass" @onclick="() => DeleteCustomer(customer.Id)">@deleteAction</a>
-                        <a class="btn btn-warning btn-sm" href="/customerItems/@customer.Id">View items</a>
+                        <a class="btn btn-warning btn-sm" href="customerItems/@customer.Id">View items</a>
                     </td>
                 </tr>
             }

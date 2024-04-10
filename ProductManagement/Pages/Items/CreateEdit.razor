@@ -4,7 +4,7 @@
 
 <PageTitle>@Title</PageTitle>
 
-@inject IGeneridCrudService<Item> _itemService;
+@inject IGeneridCrudExtService<Item> _itemService;
 
 <h1>@Title</h1>
 
@@ -20,7 +20,7 @@
             </div>
             <div class="form-group mb-2">
                 <label class="control-label" for="Price">Default price</label>
-                <input type="number" class="form-control" @bind-value="item.Price" placeholder="Type a default price" />
+                <input type="number" step="0.01" class="form-control" @bind-value="item.Price" placeholder="Type a default price" />
                 <ValidationMessage For="@(()=>item.Price)" />
             </div>
             <div class="form-group mb-2">

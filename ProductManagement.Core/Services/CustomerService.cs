@@ -17,7 +17,7 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customers = await _dbContext.Customers.ToListAsync();
+                var customers = await _dbContext.Customers.Where(x => x.DeletedAt == null).ToListAsync();
 
                 return customers;
             }
@@ -31,7 +31,7 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customer = await _dbContext.Customers.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var customer = await _dbContext.Customers.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
 
                 return customer ?? new Customer();
             }
@@ -70,7 +70,7 @@ namespace ProductManagement.Core.Services
             {
                 if (id > 0 && dto != null)
                 {
-                    var customer = await _dbContext.Customers.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    var customer = await _dbContext.Customers.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
 
                     if(customer != null && customer.Id == dto.Id)
                     {
@@ -98,9 +98,34 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customer = await _dbContext.Customers.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var customer = await _dbContext.Customers.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
 
                 if(customer != null)
+                {
+                    customer.DeletedBy = "Odalis Test"; // Delete hard code when adding authentication.
+                    customer.DeletedAt = DateTime.Now;
+
+                    _dbContext.Update(customer);
+                    await _dbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> ChangeStatus(int id)
+        {
+            try
+            {
+                var customer = await _dbContext.Customers.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
+
+                if (customer != null)
                 {
                     customer.Status = !customer.Status;
                     customer.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.

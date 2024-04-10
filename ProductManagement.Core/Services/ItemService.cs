@@ -34,7 +34,7 @@ namespace ProductManagement.Core.Services
             {
                 var items = await _dbContext.Items
                     .Include(x => x.CustomerItems)
-                    .Where(y => y.DeletedAt == null && !y.CustomerItems.Any(a => a.CustomerId == id) && y.Status)
+                    .Where(y => !y.CustomerItems.Any(a => a.DeletedAt == null && a.CustomerId == id) && y.Status)
                     .ToListAsync();
 
                 return items;

@@ -7,5 +7,6 @@
         public Task<bool> Create(T dto);
         public Task<bool> Update(int id, T dto);
         public Task<bool> Delete(int id);
+        public Task<bool> ChangeStatus(int id);
     }
 }

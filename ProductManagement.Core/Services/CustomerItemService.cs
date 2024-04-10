@@ -18,7 +18,7 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customerItems = await _dbContext.CustomersItems.ToListAsync();
+                var customerItems = await _dbContext.CustomersItems.Where(x => x.DeletedAt == null).ToListAsync();
 
                 return customerItems;
             }
@@ -34,7 +34,7 @@ namespace ProductManagement.Core.Services
             {
                 var customerItems = await _dbContext.CustomersItems
                     .Include(x => x.Item)
-                    .Where(x => x.CustomerId == id)
+                    .Where(x => x.DeletedAt == null && x.CustomerId == id)
                     .ToListAsync();
 
                 return customerItems;
@@ -49,7 +49,7 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customerItem = await _dbContext.CustomersItems.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var customerItem = await _dbContext.CustomersItems.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
 
                 return customerItem ?? new CustomerItem();
             }
@@ -88,7 +88,7 @@ namespace ProductManagement.Core.Services
             {
                 if (id > 0 && dto != null)
                 {
-                    var customerItem = await _dbContext.CustomersItems.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    var customerItem = await _dbContext.CustomersItems.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
 
                     if(customerItem != null && customerItem.Id == dto.Id)
                     {
@@ -116,9 +116,34 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customerItem = await _dbContext.CustomersItems.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var customerItem = await _dbContext.CustomersItems.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
 
                 if(customerItem != null)
+                {
+                    customerItem.DeletedBy = "Odalis Test"; // Delete hard code when adding authentication.
+                    customerItem.DeletedAt = DateTime.Now;
+
+                    _dbContext.Update(customerItem);
+                    await _dbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> ChangeStatus(int id)
+        {
+            try
+            {
+                var customerItem = await _dbContext.CustomersItems.Where(x => x.DeletedAt == null && x.Id == id).FirstOrDefaultAsync();
+
+                if (customerItem != null)
                 {
                     customerItem.Status = !customerItem.Status;
                     customerItem.UpdatedBy = "Odalis Test"; // Delete hard code when adding authentication.

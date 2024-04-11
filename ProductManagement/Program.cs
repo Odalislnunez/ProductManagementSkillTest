@@ -6,6 +6,8 @@ using ProductManagement.Core.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Bold.Licensing.BoldLicenseProvider.RegisterLicense("KJNcD0HjKwHPEkh7KUezvalDYNZvlcQ2dO1QgXJCpIA=");
+
 builder.Services.AddDbContext<PMDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DbContextConnection"), migration => migration.MigrationsAssembly("ProductManagement.Core"));
@@ -32,6 +34,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.MapControllers();
 
 app.UseRouting();
 

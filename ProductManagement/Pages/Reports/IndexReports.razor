@@ -1,0 +1,63 @@
+﻿@page "/reports"
+@using System.Linq.Expressions
+@using BoldReports.Web
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
+@inject IJSRuntime JSRuntime
+@using ProductManagement.Data;
+
+<PageTitle>Reports</PageTitle>
+
+<h1>Reports</h1>
+
+<div class="w-100 d-flex">
+    <button class="btn btn-success btn-sm m-2" @onclick="@(e => RenderReportViewer(Const.GlobalVariables.Customer))">Customer report</button>
+    <button class="btn btn-warning btn-sm m-2" @onclick="@(e => RenderReportViewer(Const.GlobalVariables.Item))">Item report</button>
+    <button class="btn btn-info btn-sm m-2" @onclick="() => ShowHideParameters(true)">Customer item report</button>
+</div>
+
+<div id="ParametersDiv" class="form-group input-group p-0 mb-2" style="@(_showDiv ? "" : "display: none;")">
+    <label class="control-label align-content-center m-2">From item number </label>
+    <input type="number" class="form-control mr-2" @bind-value="item1"/>
+    <label class="control-label align-content-center m-2">To item number </label>
+    <input type="number" class="form-control mr-2" @bind-value="item2"/>
+
+    <button class="btn btn-success btn-sm align-content-center" @onclick="@(e => RenderReportViewer(Const.GlobalVariables.CustomerItem))">View Report</button>
+</div
+<div id="report-viewer" style="width: 100%;height: 950px"></div>
+
+@code {
+    bool _showDiv;
+    int item1 = 0, item2 = 0;
+    // ReportViewer options
+    BoldReportViewerOptions viewerOptions = new BoldReportViewerOptions();
+
+    // Used to render the Bold Report Viewer component in Blazor page.
+    public async void RenderReportViewer(string report)
+    {
+        viewerOptions.ReportPath = report;
+        viewerOptions.ReportServiceURL = "/api/ReportViewer";
+        viewerOptions.Parameters = new List<ReportParameter>();
+        viewerOptions.Parameters.AddRange(new List<ReportParameter>
+        {
+            new ReportParameter
+            {
+                Name = "item1",
+                Values = new List<string> { item1.ToString() }
+            },
+            new ReportParameter
+            {
+                Name = "item2",
+                Values = new List<string> { item2.ToString() } 
+            }
+        });
+
+        ShowHideParameters(false);
+        await JSRuntime.InvokeVoidAsync("BoldReports.RenderViewer", "report-viewer", viewerOptions);
+    }
+
+    public void ShowHideParameters(bool showDiv)
+    {
+        _showDiv = showDiv;
+    }
+}

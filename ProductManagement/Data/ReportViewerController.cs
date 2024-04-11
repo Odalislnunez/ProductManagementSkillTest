@@ -71,7 +71,7 @@ namespace ProductManagement.Data
                         reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "ItemsDataSet", Value = (List<Item>)await _itemService.GetAll() });
                         break;
                     case Const.GlobalVariables.CustomerItem:
-                        reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "CustomerItemsDataSet", Value = (List<CustomerItem>)await _customerItemService.GetAll() });
+                        reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "CustomerItemDataSet", Value = (List<CustomerItem>)await _customerItemService.GetAll() });
                         break;
                     default: break;
                 }

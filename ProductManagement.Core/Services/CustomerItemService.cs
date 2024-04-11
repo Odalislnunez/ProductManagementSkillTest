@@ -18,7 +18,10 @@ namespace ProductManagement.Core.Services
         {
             try
             {
-                var customerItems = await _dbContext.CustomersItems.Where(x => x.DeletedAt == null).ToListAsync();
+                var customerItems = await _dbContext.CustomersItems
+                    .Include(x => x.Customer)
+                    .Include(x => x.Item)
+                    .Where(x => x.DeletedAt == null).ToListAsync();
 
                 return customerItems;
             }

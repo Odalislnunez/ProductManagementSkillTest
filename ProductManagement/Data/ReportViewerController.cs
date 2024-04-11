@@ -1,19 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace ProductManagement.Data
+﻿namespace ProductManagement.Data
 {
     using BoldReports.Web;
     using BoldReports.Web.ReportViewer;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
     using ProductManagement.Core.Models;
     using ProductManagement.Core.Services.Interfaces;
+    using System.Collections.Generic;
 
     namespace BlazorReportingTools.Data
     {
         [Route("api/{controller}/{action}/{id?}")]
         public class ReportViewerController : ControllerBase, IReportController
         {
+            Dictionary<string, object> jsonA;
+            private int item1 = 0, item2 = 0;
+
             // Report viewer requires a memory cache to store the information of consecutive client requests and
             // the rendered report viewer in the server.
             private IMemoryCache _cache;
@@ -71,7 +74,34 @@ namespace ProductManagement.Data
                         reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "ItemsDataSet", Value = (List<Item>)await _itemService.GetAll() });
                         break;
                     case Const.GlobalVariables.CustomerItem:
-                        reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "CustomerItemDataSet", Value = (List<CustomerItem>)await _customerItemService.GetAll() });
+                        GetParameters();
+                        item1 = Convert.ToInt32(reportOption.ReportModel.Parameters?.Where(x => x.Name == "item1").FirstOrDefault()?.Values.FirstOrDefault());
+                        item2 = Convert.ToInt32(reportOption.ReportModel.Parameters?.Where(x => x.Name == "item2").FirstOrDefault()?.Values.FirstOrDefault());
+
+                        var customerItem = await _customerItemService.GetAll();
+
+                        var customers = customerItem.Select(x => new Customer
+                        {
+                            Name = x.Customer.Name
+                        }).ToList();
+
+                        var items = customerItem.Select(x => new Item
+                        {
+                            Id = x.ItemId,
+                            Description = x.Item.Description
+                        }).ToList();
+
+                        var reportDataSources = new List<(string Name, object Value)>
+                        {
+                            ("CustomersDataSet", customers),
+                            ("ItemsDataSet", items),
+                            ("CustomerItemDataSet", customerItem)
+                        };
+
+                        reportDataSources.ForEach(dataSource =>
+                        {
+                            reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = dataSource.Name, Value = dataSource.Value });
+                        });
                         break;
                     default: break;
                 }
@@ -79,8 +109,8 @@ namespace ProductManagement.Data
 
             // Method will be called when report is loaded internally to start the layout process with ReportHelper.
             [NonAction]
-            public void OnReportLoaded(ReportViewerOptions reportOption)
-            {
+            public void OnReportLoaded(ReportViewerOptions reportOption) {
+                GetParameters();
             }
 
             [HttpPost]
@@ -93,7 +123,31 @@ namespace ProductManagement.Data
             [HttpPost]
             public object PostReportAction([FromBody] Dictionary<string, object> jsonArray)
             {
+                if(jsonArray.ContainsKey("parameters"))
+                    jsonA = jsonArray;
+
                 return ReportHelper.ProcessReport(jsonArray, this, this._cache);
+            }
+
+            private void GetParameters()
+            {
+                if (jsonA != null && jsonA.ContainsKey("parameters"))
+                {
+                    var reportParameters = ReportHelper.GetParameters(jsonA, this, _cache);
+                    if (reportParameters != null)
+                    {
+                        foreach (var rptParameter in reportParameters)
+                        {
+                            if (rptParameter.Values.Count > 0)
+                            {
+                                if (rptParameter.Name == "item1")
+                                    item1 = Convert.ToInt32(rptParameter.Values[0] ?? "0");
+                                else if (rptParameter.Name == "item2")
+                                    item2 = Convert.ToInt32(rptParameter.Values[0] ?? "0");
+                            }
+                        }
+                    }
+                }
             }
         }
     }

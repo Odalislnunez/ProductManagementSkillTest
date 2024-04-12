@@ -1,47 +1,53 @@
 ﻿@page "/customers/create"
 @page "/customers/edit/{id:int}"
 @using System.Linq.Expressions
-
-<PageTitle>@Title</PageTitle>
-
 @inject IGeneridCrudService<Customer> _customerService;
 
-<h1>@Title</h1>
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <PageTitle>@Title</PageTitle>
 
-<div class="row">
-    <div class="col-sm-6">
-        <EditForm Model="@customer" OnValidSubmit="CreateEditCustomer">
-            <DataAnnotationsValidator />
+        <h1>@Title</h1>
 
-            <div class="form-group mb-2">
-                <label class="control-label" for="Name">Customer name</label>
-                <InputText class="form-control" @bind-Value="customer.Name" Placeholder="Type a name" />
-                <ValidationMessage For="@(()=>customer.Name)" />
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Phone">Phone</label>
-                <input type="tel" class="form-control" @bind="customer.Phone" Placeholder="Type a phone number" maxlength="10"/>
-                <ValidationMessage For="@(()=>customer.Phone)" />
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Email">Email</label>
-                <input type="email" class="form-control" @bind="customer.Email" placeholder="Type an e-mail" />
-                <ValidationMessage For="@(()=>customer.Email)" />
-            </div>
-            <div class="my-2">
-                @message
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-info btn-sm" />
-            </div>
-        </EditForm>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <EditForm Context="editContext" Model="@customer" OnValidSubmit="CreateEditCustomer">
+                    <DataAnnotationsValidator />
 
-<br />
-<div>
-    <a class="btn btn-info btn-sm" href="customers">Return to list</a>
-</div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Name">Customer name</label>
+                        <InputText class="form-control" @bind-Value="customer.Name" Placeholder="Type a name" />
+                        <ValidationMessage For="@(()=>customer.Name)" />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Phone">Phone</label>
+                        <input type="tel" class="form-control" @bind="customer.Phone" Placeholder="Type a phone number" maxlength="10" />
+                        <ValidationMessage For="@(()=>customer.Phone)" />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Email">Email</label>
+                        <input type="email" class="form-control" @bind="customer.Email" placeholder="Type an e-mail" />
+                        <ValidationMessage For="@(()=>customer.Email)" />
+                    </div>
+                    <div class="my-2">
+                        @message
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-info btn-sm" />
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+
+        <br />
+        <div>
+            <a class="btn btn-info btn-sm" href="customers">Return to list</a>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p>Please signed in.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]

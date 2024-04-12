@@ -1,68 +1,75 @@
 ﻿@page "/customerItems/{customerId:int}"
 @using System.Linq.Expressions
 
-<PageTitle>Customer items</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Customer items</PageTitle>
 
-@inject IGeneridCrudService<Customer> _customerService;
-@inject IGeneridCrudExtService<CustomerItem> _customerItemService;
+        @inject IGeneridCrudService<Customer> _customerService;
+        @inject IGeneridCrudExtService<CustomerItem> _customerItemService;
 
-<h1>Customer items</h1>
+        <h1>Customer items</h1>
 
-<div class="form-group input-group p-0 mb-2">
-    <label class="control-label align-content-center m-2">Customer  </label>
-    <input type="text" class="form-control mr-2" value="@customer.Name" readonly />
+        <div class="form-group input-group p-0 mb-2">
+            <label class="control-label align-content-center m-2">Customer  </label>
+            <input type="text" class="form-control mr-2" value="@customer.Name" readonly />
 
-    <a class="btn btn-success btn-sm align-content-center" href="/customerItems/create/@customerId">New customer item</a>
-</div
+            <a class="btn btn-success btn-sm align-content-center" href="/customerItems/create/@customerId">New customer item</a>
+        </div
 
-@if (customerItems == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Item number</th>
-                <th>Description</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customerItem in customerItems)
-            {
-                <tr>
-                    <td>@customerItem.ItemId</td>
-                    <td>@customerItem.Item.Description</td>
-                    <td>@customerItem.Quantity</td>
-                    <td>@customerItem.Price.ToString("n2")</td>
-                    @{
-                        var statText = customerItem.Status ? "Active" : "Inactive";
-                        var deleteAction = customerItem.Status ? "Deactivate" : "Activate";
-                        var deleteActionClass = customerItem.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+        @if (customerItems == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item number</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customerItem in customerItems)
+                    {
+                        <tr>
+                            <td>@customerItem.ItemId</td>
+                            <td>@customerItem.Item.Description</td>
+                            <td>@customerItem.Quantity</td>
+                            <td>@customerItem.Price.ToString("n2")</td>
+                            @{
+                                var statText = customerItem.Status ? "Active" : "Inactive";
+                                var deleteAction = customerItem.Status ? "Deactivate" : "Activate";
+                                var deleteActionClass = customerItem.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+                            }
+                            <td>@statText</td>
+                            <td>
+                                <a class="btn btn-info btn-sm" href="/customerItems/edit/@customerItem.Id">Edit</a>
+                                <a class="@deleteActionClass" @onclick="() => ChangeStatus(customerItem.Id)">@deleteAction</a>
+                                <a class="btn btn-danger btn-sm" @onclick="() => DeleteCustomerItem(customerItem.Id)">Delete</a>
+                            </td>
+                        </tr>
                     }
-                    <td>@statText</td>
-                    <td>
-                        <a class="btn btn-info btn-sm" href="/customerItems/edit/@customerItem.Id">Edit</a>
-                        <a class="@deleteActionClass" @onclick="() => ChangeStatus(customerItem.Id)">@deleteAction</a>
-                        <a class="btn btn-danger btn-sm" @onclick="() => DeleteCustomerItem(customerItem.Id)">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div class="my-2">
-        @message
-    </div>
-    <br />
-    <div>
-        <a class="btn btn-info btn-sm" href="customers">Return to customer list</a>
-    </div>
-}
+                </tbody>
+            </table>
+            <div class="my-2">
+                @message
+            </div>
+            <br />
+            <div>
+                <a class="btn btn-info btn-sm" href="customers">Return to customer list</a>
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p>Please signed in.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]

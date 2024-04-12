@@ -1,47 +1,53 @@
 ﻿@page "/items/create"
 @page "/items/edit/{id:int}"
 @using System.Linq.Expressions
-
-<PageTitle>@Title</PageTitle>
-
 @inject IGeneridCrudExtService<Item> _itemService;
 
-<h1>@Title</h1>
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <PageTitle>@Title</PageTitle>
 
-<div class="row">
-    <div class="col-sm-6">
-        <EditForm Model="@item" OnValidSubmit="CreateEditItem">
-            <DataAnnotationsValidator />
+        <h1>@Title</h1>
 
-            <div class="form-group mb-2">
-                <label class="control-label" for="Description">Description</label>
-                <InputText class="form-control" @bind-Value="item.Description" Placeholder="Type a description" />
-                <ValidationMessage For="@(()=>item.Description)" />
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Price">Default price</label>
-                <input type="number" step="0.01" class="form-control" @bind-value="item.Price" placeholder="Type a default price" />
-                <ValidationMessage For="@(()=>item.Price)" />
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Category">Item category</label>
-                <input type="text" class="form-control" @bind-value="item.Category" Placeholder="Type a category" maxlength="1" />
-                <ValidationMessage For="@(()=>item.Category)" />
-            </div>
-            <div class="my-2">
-                @message
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-info btn-sm" />
-            </div>
-        </EditForm>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <EditForm Context="editContext" Model="@item" OnValidSubmit="CreateEditItem">
+                    <DataAnnotationsValidator />
 
-<br />
-<div>
-    <a class="btn btn-info btn-sm" href="items">Return to list</a>
-</div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Description">Description</label>
+                        <InputText class="form-control" @bind-Value="item.Description" Placeholder="Type a description" maxlength="50" />
+                        <ValidationMessage For="@(()=>item.Description)" />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Price">Default price</label>
+                        <input type="number" step="0.01" class="form-control" @bind-value="item.Price" placeholder="Type a default price" />
+                        <ValidationMessage For="@(()=>item.Price)" />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Category">Item category</label>
+                        <input type="text" class="form-control" @bind-value="item.Category" Placeholder="Type a category" maxlength="1" />
+                        <ValidationMessage For="@(()=>item.Category)" />
+                    </div>
+                    <div class="my-2">
+                        @message
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-info btn-sm" />
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+
+        <br />
+        <div>
+            <a class="btn btn-info btn-sm" href="items">Return to list</a>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p>Please signed in.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]

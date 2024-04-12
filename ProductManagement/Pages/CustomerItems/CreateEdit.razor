@@ -2,58 +2,64 @@
 @page "/customerItems/edit/{id:int}"
 @using System.Linq.Expressions
 @using Items;
-
-<PageTitle>@Title</PageTitle>
-
 @inject IGeneridCrudService<Customer> _customerService;
 @inject IGeneridCrudExtService<Item> _itemService;
 @inject IGeneridCrudExtService<CustomerItem> _customerItemService;
 
-<h1>@Title</h1>
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <PageTitle>@Title</PageTitle>
 
-<div class="row">
-    <div class="col-sm-6">
-        <EditForm Model="@customerItem" OnValidSubmit="CreateEditCustomerItem">
-            <DataAnnotationsValidator />
+        <h1>@Title</h1>
 
-            <div class="form-group mb-2">
-                <label class="control-label">Customer</label>
-                <InputText class="form-control" @bind-Value="customer.Name" readonly />
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Item">Item</label>
-                <div class="input-group">
-                    <InputText class="form-control" @bind-Value="item.Description" disabled />
-                    <button type="button" class="btn btn-info btn-sm" @onclick="ShowItemConsult" disabled="@(id > 0 ? true : false)">Search item</button>
-                    <ValidationMessage For="@(()=>customerItem.ItemId)" />
-                </div>
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Quantity">Quantity</label>
-                <input type="number" class="form-control" @bind="customerItem.Quantity" Placeholder="Type a quantity" />
-                <ValidationMessage For="@(()=>customerItem.Quantity)" />
-            </div>
-            <div class="form-group mb-2">
-                <label class="control-label" for="Price">Price</label>
-                <input type="number" step="0.01" class="form-control" @bind="customerItem.Price" placeholder="Type a price" />
-                <ValidationMessage For="@(()=>customerItem.Price)" />
-            </div>
-            <div class="my-2">
-                @message
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-info btn-sm" />
-            </div>
-        </EditForm>
-    </div>
-</div>
+        <div class="row">
+            <div class="col-sm-6">
+                <EditForm Context="editContext" Model="@customerItem" OnValidSubmit="CreateEditCustomerItem">
+                    <DataAnnotationsValidator />
 
-<br />
-<div>
-    <a class="btn btn-info btn-sm" href="customerItems/@customer.Id">Return to list</a>
-</div>
+                    <div class="form-group mb-2">
+                        <label class="control-label">Customer</label>
+                        <InputText class="form-control" @bind-Value="customer.Name" readonly />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Item">Item</label>
+                        <div class="input-group">
+                            <InputText class="form-control" @bind-Value="item.Description" disabled />
+                            <button type="button" class="btn btn-info btn-sm" @onclick="ShowItemConsult" disabled="@(id > 0 ? true : false)">Search item</button>
+                            <ValidationMessage For="@(()=>customerItem.ItemId)" />
+                        </div>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Quantity">Quantity</label>
+                        <input type="number" class="form-control" @bind="customerItem.Quantity" Placeholder="Type a quantity" />
+                        <ValidationMessage For="@(()=>customerItem.Quantity)" />
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="control-label" for="Price">Price</label>
+                        <input type="number" step="0.01" class="form-control" @bind="customerItem.Price" placeholder="Type a price" />
+                        <ValidationMessage For="@(()=>customerItem.Price)" />
+                    </div>
+                    <div class="my-2">
+                        @message
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-info btn-sm" />
+                    </div>
+                </EditForm>
+            </div>
+        </div>
 
-<Modal @ref="modal" Size="ModalSize.ExtraLarge" />
+        <br />
+        <div>
+            <a class="btn btn-info btn-sm" href="customerItems/@customer.Id">Return to list</a>
+        </div>
+
+        <Modal @ref="modal" Size="ModalSize.ExtraLarge" />
+    </Authorized>
+    <NotAuthorized>
+        <p>Please signed in.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter]

@@ -1,60 +1,67 @@
 ﻿@page "/items"
 @using System.Linq.Expressions
 
-<PageTitle>Items</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Items</PageTitle>
 
-@inject IGeneridCrudExtService<Item> _itemService;
+        @inject IGeneridCrudExtService<Item> _itemService;
 
-<h1>Items</h1>
+        <h1>Items</h1>
 
-<div class="w-100 d-flex justify-content-end">
-    <a class="btn btn-success btn-sm" href="/items/create">New item</a>
-</div>
+        <div class="w-100 d-flex justify-content-end">
+            <a class="btn btn-success btn-sm" href="/items/create">New item</a>
+        </div>
 
-@if (items == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Item number</th>
-                <th>Description</th>
-                <th>Default Price</th>
-                <th>Item category</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in items)
-            {
-                <tr>
-                    <td>@item.Id</td>
-                    <td>@item.Description</td>
-                    <td>@item.Price.ToString("n2")</td>
-                    <td>@item.Category</td>
-                    @{
-                        var statText = item.Status ? "Active" : "Inactive";
-                        var deleteAction = item.Status ? "Deactivate" : "Activate";
-                        var deleteActionClass = item.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+        @if (items == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item number</th>
+                        <th>Description</th>
+                        <th>Default Price</th>
+                        <th>Item category</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Description</td>
+                            <td>@item.Price.ToString("n2")</td>
+                            <td>@item.Category</td>
+                            @{
+                                var statText = item.Status ? "Active" : "Inactive";
+                                var deleteAction = item.Status ? "Deactivate" : "Activate";
+                                var deleteActionClass = item.Status ? "btn btn-danger btn-sm" : "btn btn-success btn-sm";
+                            }
+                            <td>@statText</td>
+                            <td>
+                                <a class="btn btn-info btn-sm" href="/items/edit/@item.Id">Edit</a>
+                                <a class="@deleteActionClass" @onclick="() => ChangeStatus(item.Id)">@deleteAction</a>
+                                <a class="btn btn-danger btn-sm" @onclick="() => DeleteItem(item.Id)">Delete</a>
+                            </td>
+                        </tr>
                     }
-                    <td>@statText</td>
-                    <td>
-                        <a class="btn btn-info btn-sm" href="/items/edit/@item.Id">Edit</a>
-                        <a class="@deleteActionClass" @onclick="() => ChangeStatus(item.Id)">@deleteAction</a>
-                        <a class="btn btn-danger btn-sm" @onclick="() => DeleteItem(item.Id)">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div class="my-2">
-        @message
-    </div>
-}
+                </tbody>
+            </table>
+            <div class="my-2">
+                @message
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p>Please signed in.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private IEnumerable<Item> items;
@@ -84,7 +91,7 @@ else
 
     private async Task DeleteItem(int id)
     {
-        if(id > 0)
+        if (id > 0)
         {
             var result = await _itemService.Delete(id);
 

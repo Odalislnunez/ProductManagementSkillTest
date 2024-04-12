@@ -5,7 +5,7 @@ using ProductManagement.Core.Services.Interfaces;
 
 namespace ProductManagement.Core.Services
 {
-    public class CustomerItemService : IGeneridCrudExtService<CustomerItem>
+    public class CustomerItemService : IGeneridCrudExt2Service<CustomerItem>
     {
         private readonly PMDbContext _dbContext;
 
@@ -22,6 +22,23 @@ namespace ProductManagement.Core.Services
                     .Include(x => x.Customer)
                     .Include(x => x.Item)
                     .Where(x => x.DeletedAt == null).ToListAsync();
+
+                return customerItems;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<CustomerItem>> GetAll(int idfrom, int idto)
+        {
+            try
+            {
+                var customerItems = await _dbContext.CustomersItems
+                    .Include(x => x.Customer)
+                    .Include(x => x.Item)
+                    .Where(x => x.DeletedAt == null && x.ItemId >= idfrom && x.ItemId <= idto).ToListAsync();
 
                 return customerItems;
             }

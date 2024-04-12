@@ -16,7 +16,7 @@
 
                     <div class="form-group mb-2">
                         <label class="control-label" for="Description">Description</label>
-                        <InputText class="form-control" @bind-Value="item.Description" Placeholder="Type a description" />
+                        <InputText class="form-control" @bind-Value="item.Description" Placeholder="Type a description" maxlength="50" />
                         <ValidationMessage For="@(()=>item.Description)" />
                     </div>
                     <div class="form-group mb-2">

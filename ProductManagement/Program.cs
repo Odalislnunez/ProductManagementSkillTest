@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ProductManagement.Areas.Identity;
 using ProductManagement.Core.Models;
 using ProductManagement.Core.Persistences;
 using ProductManagement.Core.Services;
@@ -14,8 +17,11 @@ builder.Services.AddDbContext<PMDbContext>(options =>
 });
 
 // Add services to the container.
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<PMDbContext>();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddTransient<IGeneridCrudService<Customer>, CustomerService>();
 builder.Services.AddTransient<IGeneridCrudExtService<Item>, ItemService>();
 builder.Services.AddTransient<IGeneridCrudExtService<CustomerItem>, CustomerItemService>();
@@ -35,12 +41,13 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.MapControllers();
-
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-app.UseAuthentication();;
 
 app.Run();

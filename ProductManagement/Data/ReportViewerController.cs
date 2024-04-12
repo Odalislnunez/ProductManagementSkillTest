@@ -14,7 +14,7 @@
         [Route("api/{controller}/{action}/{id?}")]
         public class ReportViewerController : ControllerBase, IReportController
         {
-            Dictionary<string, object> jsonA;
+            private Dictionary<string, object> jsonA;
             private int item1 = 0, item2 = 0;
 
             // Report viewer requires a memory cache to store the information of consecutive client requests and
@@ -25,14 +25,14 @@
             private IWebHostEnvironment _hostingEnvironment;
             private IGeneridCrudService<Customer> _customerService;
             private IGeneridCrudExtService<Item> _itemService;
-            private IGeneridCrudExtService<CustomerItem> _customerItemService;
+            private IGeneridCrudExt2Service<CustomerItem> _customerItemService;
 
             public ReportViewerController(
                 IMemoryCache memoryCache,
                 IWebHostEnvironment hostingEnvironment,
                 IGeneridCrudService<Customer> customerService,
                 IGeneridCrudExtService<Item> itemService,
-                IGeneridCrudExtService<CustomerItem> customerItemService
+                IGeneridCrudExt2Service<CustomerItem> customerItemService
                 )
             {
                 _cache = memoryCache;
@@ -74,11 +74,15 @@
                         reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "ItemsDataSet", Value = (List<Item>)await _itemService.GetAll() });
                         break;
                     case Const.GlobalVariables.CustomerItem:
-                        GetParameters();
                         item1 = Convert.ToInt32(reportOption.ReportModel.Parameters?.Where(x => x.Name == "item1").FirstOrDefault()?.Values.FirstOrDefault());
                         item2 = Convert.ToInt32(reportOption.ReportModel.Parameters?.Where(x => x.Name == "item2").FirstOrDefault()?.Values.FirstOrDefault());
 
-                        var customerItem = await _customerItemService.GetAll();
+                        var customerItem = new List<CustomerItem>();
+                        
+                        if (item1 > 0 && item2 > 0)
+                            customerItem = (List<CustomerItem>)await _customerItemService.GetAll(item1, item2);
+                        else
+                            customerItem = (List<CustomerItem>)await _customerItemService.GetAll();
 
                         var customers = customerItem.Select(x => new Customer
                         {
@@ -109,8 +113,24 @@
 
             // Method will be called when report is loaded internally to start the layout process with ReportHelper.
             [NonAction]
-            public void OnReportLoaded(ReportViewerOptions reportOption) {
-                GetParameters();
+            public void OnReportLoaded(ReportViewerOptions reportOption) 
+            {
+                var reportParameters = ReportHelper.GetParametersWithValues(jsonA, this, _cache);
+                List<ReportParameter> modifiedParameters = new List<ReportParameter>();
+                if (reportParameters != null)
+                {
+                    foreach (var rptParameter in reportParameters)
+                    {
+                        modifiedParameters.Add(new ReportParameter()
+                        {
+                            Name = rptParameter.Name,
+                            Values = (List<string>)rptParameter.Values,
+                            Hidden = true
+                        });
+                    }
+                    reportOption.ReportModel.Parameters = modifiedParameters;
+                    OnInitReportOptions(reportOption);
+                }
             }
 
             [HttpPost]
@@ -123,31 +143,9 @@
             [HttpPost]
             public object PostReportAction([FromBody] Dictionary<string, object> jsonArray)
             {
-                if(jsonArray.ContainsKey("parameters"))
-                    jsonA = jsonArray;
+                jsonA = jsonArray;
 
                 return ReportHelper.ProcessReport(jsonArray, this, this._cache);
-            }
-
-            private void GetParameters()
-            {
-                if (jsonA != null && jsonA.ContainsKey("parameters"))
-                {
-                    var reportParameters = ReportHelper.GetParameters(jsonA, this, _cache);
-                    if (reportParameters != null)
-                    {
-                        foreach (var rptParameter in reportParameters)
-                        {
-                            if (rptParameter.Values.Count > 0)
-                            {
-                                if (rptParameter.Name == "item1")
-                                    item1 = Convert.ToInt32(rptParameter.Values[0] ?? "0");
-                                else if (rptParameter.Name == "item2")
-                                    item2 = Convert.ToInt32(rptParameter.Values[0] ?? "0");
-                            }
-                        }
-                    }
-                }
             }
         }
     }

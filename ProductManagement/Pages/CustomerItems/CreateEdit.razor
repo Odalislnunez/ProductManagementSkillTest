@@ -4,7 +4,7 @@
 @using Items;
 @inject IGeneridCrudService<Customer> _customerService;
 @inject IGeneridCrudExtService<Item> _itemService;
-@inject IGeneridCrudExtService<CustomerItem> _customerItemService;
+@inject IGeneridCrudExt2Service<CustomerItem> _customerItemService;
 
 <AuthorizeView Context="authContext">
     <Authorized>

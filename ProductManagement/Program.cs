@@ -24,7 +24,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddTransient<IGeneridCrudService<Customer>, CustomerService>();
 builder.Services.AddTransient<IGeneridCrudExtService<Item>, ItemService>();
-builder.Services.AddTransient<IGeneridCrudExtService<CustomerItem>, CustomerItemService>();
+builder.Services.AddTransient<IGeneridCrudExt2Service<CustomerItem>, CustomerItemService>();
 builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();

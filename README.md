@@ -62,7 +62,7 @@ Endpoints with comments.
 Indexed code.
 ```
 
-## Deployment 📦
+## Deployment (Two ways) 📦
 
 _The following steps are required to install the system in a temporary production environment:_
 
@@ -90,6 +90,34 @@ If you don't get the interface of the application, see if you have another port 
 ```
 IMPORTANT: If you close the command line, application will shut down. This is only a temporary production environment.
 ```
+
+_The next steps are required to install the system in a IIS server on a Windows PC:_
+
+```
+Download and install .Net 8 SDK from the following link: 
+```
+* [.Net8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+```
+Download application from the following link:
+```
+* [Items Management System release](https://drive.google.com/drive/folders/1-dL8EbARDDn9QzV6Oo6tvF66hVzzGas9?usp=sharing)
+```
+And located into a folder named 'Items Management System' in Local Disk C.
+```
+```
+Install IIS. Follow this link to have three ways to install it:
+```
+* [IIS server]([https://dotnet.microsoft.com/en-us/download/dotnet/8.0](https://www.itechguides.com/install-iis-windows-10/))
+```
+In IIS: 
+```
+```
+Create Site: Name: ItemsMSystem, Application pool: ItemsMSystem, Physical path: C:\Item Management System, Binding Type: http, Binding Port: 8081
+```
+```
+Run the following link to access to the application:
+```
+* [Items Management System](http://localhost:8081)
 
 ## Build with 🛠️
 

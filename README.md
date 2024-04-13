@@ -78,7 +78,7 @@ Download application from the following link:
 And unzip the file into a folder named 'Items Management System' in Local Disk C.
 ```
 ```
-Open command line as Administrator and run the following command: cd "C:\Items Management System\ProductManagement.exe"
+Open command line as Administrator and run the following command: C:\Items Management System\ProductManagement.exe
 ```
 ```
 The application is going to says where is running (Now listening on...), access to the following link:

@@ -6,6 +6,7 @@ using ProductManagement.Core.Models;
 using ProductManagement.Core.Persistences;
 using ProductManagement.Core.Services;
 using ProductManagement.Core.Services.Interfaces;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,5 +50,17 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+using (var scope = app.Services.CreateScope())
+{
+    var _Db = scope.ServiceProvider.GetRequiredService<PMDbContext>();
+    if (_Db != null)
+    {
+        if (_Db.Database.GetPendingMigrations().Any())
+        {
+            _Db.Database.Migrate();
+        }
+    }
+}
 
 app.Run();

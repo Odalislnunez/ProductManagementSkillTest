@@ -35,8 +35,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        items = await _itemService.GetAllById(customerId);
+        await LoadItems();
 
         base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            await LoadItems();
+        }
+    }
+
+    private async Task LoadItems()
+    {
+        items = await _itemService.GetAllById(customerId);
+        StateHasChanged();
     }
 }

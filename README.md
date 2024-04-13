@@ -78,7 +78,7 @@ Download application from the following link:
 And unzip the file into a folder named 'Items Management System' in Local Disk C.
 ```
 ```
-Open command line as Administrator and run the following command: cd "C:\Item Management System\ProductManagement.exe"
+Open command line as Administrator and run the following command: cd "C:\Items Management System\ProductManagement.exe"
 ```
 ```
 The application is going to says where is running (Now listening on...), access to the following link:
@@ -112,7 +112,7 @@ Install IIS. Follow this link to have three ways to install it:
 In IIS: 
 ```
 ```
-Create Site: Name: ItemsMSystem, Application pool: ItemsMSystem, Physical path: C:\Item Management System, Binding Type: http, Binding Port: 8081
+Create Site: Name: ItemsMSystem, Application pool: ItemsMSystem, Physical path: C:\Items Management System, Binding Type: http, Binding Port: 8081
 ```
 ```
 Run the following link to access to the application:

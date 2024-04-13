@@ -67,9 +67,9 @@ Indexed code.
 _The following steps are required to install the system in a temporary production environment:_
 
 ```
-Download and install .Net 8 SDK & ASP.Net Runtime Hosting Bundle from the following link: 
+Download and install .Net 8 SDK from the following link: 
 ```
-* [.Net8.0 SDK & Hosting bundle of ASP.Net Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+* [.Net8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 ```
 Download application from the following link:
 ```
@@ -106,9 +106,9 @@ Install IIS. Follow this link to have three ways to install it (IMPORTANT: When 
 ```
 * [IIS server]([https://dotnet.microsoft.com/en-us/download/dotnet/8.0](https://www.itechguides.com/install-iis-windows-10/))
 ```
-Download and install .Net 8 SDK from the following link: 
+Download and install .Net 8 SDK & ASP.Net Runtime Hosting Bundle from the following link: 
 ```
-* [.Net8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+* [.Net8.0 SDK & Hosting bundle of ASP.Net Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 ```
 In IIS: 
 ```

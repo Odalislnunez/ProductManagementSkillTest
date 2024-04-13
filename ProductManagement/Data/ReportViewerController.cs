@@ -59,12 +59,18 @@
                 string reportPath = Path.Combine(basePath, reportOption.ReportModel.ReportPath);
 
                 FileStream fileStream = new FileStream(reportPath, FileMode.Open, FileAccess.Read);
-                MemoryStream reportStream = new MemoryStream();
-                fileStream.CopyTo(reportStream);
-                reportStream.Position = 0;
-                fileStream.Close();
-                reportOption.ReportModel.Stream = reportStream;
+                reportOption.ReportModel.Stream = fileStream;
+                
+                if (reportOption.ReportModel.ReportPath != Const.GlobalVariables.CustomerItem)
+                {
+                    MemoryStream reportStream = new MemoryStream();
+                    fileStream.CopyTo(reportStream);
+                    reportStream.Position = 0;
+                    fileStream.Close();
 
+                    reportOption.ReportModel.Stream = reportStream;
+                }
+                
                 switch (reportOption.ReportModel.ReportPath)
                 {
                     case Const.GlobalVariables.Customer:
@@ -73,12 +79,36 @@
                     case Const.GlobalVariables.Item:
                         reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = "ItemsDataSet", Value = (List<Item>)await _itemService.GetAll() });
                         break;
-                    case Const.GlobalVariables.CustomerItem:
+                    default: break;
+                }
+            }
+
+            // Method will be called when report is loaded internally to start the layout process with ReportHelper.
+            [NonAction]
+            public async void OnReportLoaded(ReportViewerOptions reportOption) 
+            {
+                if(reportOption.ReportModel.ReportPath == Const.GlobalVariables.CustomerItem)
+                {
+                    var reportParameters = ReportHelper.GetParametersWithValues(jsonA, this, _cache);
+                    List<ReportParameter> modifiedParameters = new List<ReportParameter>();
+                    if (reportParameters != null)
+                    {
+                        foreach (var rptParameter in reportParameters)
+                        {
+                            modifiedParameters.Add(new ReportParameter()
+                            {
+                                Name = rptParameter.Name,
+                                Values = (List<string>)rptParameter.Values,
+                                Hidden = true
+                            });
+                        }
+                        reportOption.ReportModel.Parameters = modifiedParameters;
+
                         item1 = Convert.ToInt32(reportOption.ReportModel.Parameters?.Where(x => x.Name == "item1").FirstOrDefault()?.Values.FirstOrDefault());
                         item2 = Convert.ToInt32(reportOption.ReportModel.Parameters?.Where(x => x.Name == "item2").FirstOrDefault()?.Values.FirstOrDefault());
 
                         var customerItem = new List<CustomerItem>();
-                        
+
                         if (item1 > 0 && item2 > 0)
                             customerItem = (List<CustomerItem>)await _customerItemService.GetAll(item1, item2);
                         else
@@ -102,34 +132,13 @@
                             ("CustomerItemDataSet", customerItem)
                         };
 
+                        reportOption.ReportModel.DataSources.Clear();
+
                         reportDataSources.ForEach(dataSource =>
                         {
                             reportOption.ReportModel.DataSources.Add(new ReportDataSource { Name = dataSource.Name, Value = dataSource.Value });
                         });
-                        break;
-                    default: break;
-                }
-            }
-
-            // Method will be called when report is loaded internally to start the layout process with ReportHelper.
-            [NonAction]
-            public void OnReportLoaded(ReportViewerOptions reportOption) 
-            {
-                var reportParameters = ReportHelper.GetParametersWithValues(jsonA, this, _cache);
-                List<ReportParameter> modifiedParameters = new List<ReportParameter>();
-                if (reportParameters != null)
-                {
-                    foreach (var rptParameter in reportParameters)
-                    {
-                        modifiedParameters.Add(new ReportParameter()
-                        {
-                            Name = rptParameter.Name,
-                            Values = (List<string>)rptParameter.Values,
-                            Hidden = true
-                        });
                     }
-                    reportOption.ReportModel.Parameters = modifiedParameters;
-                    OnInitReportOptions(reportOption);
                 }
             }
 

@@ -69,7 +69,8 @@
                 }
             });
 
-            ShowHideParameters(false);
+            if(report != Const.GlobalVariables.CustomerItem)
+                ShowHideParameters(false);
             message = string.Empty;
             await JSRuntime.InvokeVoidAsync("BoldReports.RenderViewer", "report-viewer", viewerOptions);
         }

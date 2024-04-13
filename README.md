@@ -1,6 +1,6 @@
 # Items Management System.
 
-_This system is a simple application to an user or employee can manage customers, items and all the items assigned to a customer and generate report of them. It's a system for testing skill purpose. Documentation is available in two formats inside this repository, find Items Management.pdf or Items Management.chm._
+_This system is a simple application to an user or employee can manage customers, items and all the items assigned to a customer and generate report of them. It's a system for testing skill purpose. Documentation is available in two formats inside this repository, find Items Management.pdf or Items Management.chm. Master branch only has the initial structure of the project, but development once has the complete final project._
 
 ## Getting start 🚀
 
@@ -64,28 +64,22 @@ Indexed code.
 
 ## Deployment 📦
 
-_The following steps are required to install the system in a production environment:_
+_The following steps are required to install the system in a temporary production environment:_
 
 ```
-Crear compilado del proyecto: Ejecutar proyecto en release, Publish WIS.Web: Configuration = Release, Target Framework = net6.0, Target Runtime = win-x86.
+Download and install .Net 8 SDK from the following link: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
 ```
 ```
-Crear carpeta Cliente en ruta: C:\inetpub\wwwroot\ y dentro de esta colocar el compilado del proyecto.
+Download application from the following link: https://drive.google.com/drive/folders/1-dL8EbARDDn9QzV6Oo6tvF66hVzzGas9?usp=sharing and located into a folder named 'Items Management System' in Local Disk C.
 ```
 ```
-Instalar IIS.
+Open command line as Administrator and run the following command: cd "C:\Item Management System\ProductManagement.exe"
 ```
 ```
-Crear Server Certificate: Self-Signed Certificate, Name: Certificado, Type: Personal.
+The application is going to says where is running (Now listening on...), access to the following link: http://localhost:5000, if you don't get the interface of the application, see if you have another port and change it. Example: listening on localhost:5000, or 5001, or the once that it says, you are going to change it in the browser.
 ```
 ```
-Crear Aplication Pool: Name: DefaultAspApp, .NET CLR Version: No Managed Code, Enable 32-Bit Applications: True, Identity: farmahorro\_InterfaceDynamic.
-```
-```
-Crear Site: Name: Wis, Application pool: DefaultAspApp, Physical path: C:\inetpub\wwwroot\Cliente, Binding Type: https, Binding Port: 443, SSL Certificate: Certificado.
-```
-```
-Instalar dependencias: aspnet core runtime 6.0.21 x86, VFPOLEDBSetup.
+IMPORTANT: If you close the command line, application will shut down. This is only a temporary production environment.
 ```
 
 ## Build with 🛠️

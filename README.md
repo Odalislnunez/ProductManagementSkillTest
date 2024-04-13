@@ -67,16 +67,25 @@ Indexed code.
 _The following steps are required to install the system in a temporary production environment:_
 
 ```
-Download and install .Net 8 SDK from the following link: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+Download and install .Net 8 SDK from the following link: 
 ```
+* [.Net8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 ```
-Download application from the following link: https://drive.google.com/drive/folders/1-dL8EbARDDn9QzV6Oo6tvF66hVzzGas9?usp=sharing and located into a folder named 'Items Management System' in Local Disk C.
+Download application from the following link:
+```
+* [Items Management System release](https://drive.google.com/drive/folders/1-dL8EbARDDn9QzV6Oo6tvF66hVzzGas9?usp=sharing)
+```
+And located into a folder named 'Items Management System' in Local Disk C.
 ```
 ```
 Open command line as Administrator and run the following command: cd "C:\Item Management System\ProductManagement.exe"
 ```
 ```
-The application is going to says where is running (Now listening on...), access to the following link: http://localhost:5000, if you don't get the interface of the application, see if you have another port and change it. Example: listening on localhost:5000, or 5001, or the once that it says, you are going to change it in the browser.
+The application is going to says where is running (Now listening on...), access to the following link:
+```
+* [Items Management System](http://localhost:5000)
+```
+If you don't get the interface of the application, see if you have another port and change it. Example: listening on localhost:5000, or 5001, or the once that it says, you are going to change it in the browser.
 ```
 ```
 IMPORTANT: If you close the command line, application will shut down. This is only a temporary production environment.

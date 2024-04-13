@@ -75,7 +75,7 @@ Download application from the following link:
 ```
 * [Items Management System release](https://drive.google.com/drive/folders/1-dL8EbARDDn9QzV6Oo6tvF66hVzzGas9?usp=sharing)
 ```
-And located into a folder named 'Items Management System' in Local Disk C.
+And unzip the file into a folder named 'Items Management System' in Local Disk C.
 ```
 ```
 Open command line as Administrator and run the following command: cd "C:\Item Management System\ProductManagement.exe"
@@ -102,7 +102,7 @@ Download application from the following link:
 ```
 * [Items Management System release](https://drive.google.com/drive/folders/1-dL8EbARDDn9QzV6Oo6tvF66hVzzGas9?usp=sharing)
 ```
-And located into a folder named 'Items Management System' in Local Disk C.
+And unzip the file into a folder named 'Items Management System' in Local Disk C.
 ```
 ```
 Install IIS. Follow this link to have three ways to install it:
